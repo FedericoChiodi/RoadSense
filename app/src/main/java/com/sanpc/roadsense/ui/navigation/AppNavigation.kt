@@ -115,7 +115,8 @@ fun AppNavigation(
                 }
 
                 composable(Routes.REPORTS){ Reports(
-
+                    potholes = potholes,
+                    drops = drops
                     )
                 }
 

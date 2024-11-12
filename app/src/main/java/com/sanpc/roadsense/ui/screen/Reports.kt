@@ -13,40 +13,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sanpc.roadsense.data.model.Drop
+import com.sanpc.roadsense.data.model.Pothole
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 
-data class Pothole(
-    val timestamp: String,
-    val latitude: Double,
-    val longitude: Double
-)
-
-data class Drop(
-    val timestamp: String,
-    val startLatitude: Double,
-    val startLongitude: Double,
-    val endLatitude: Double,
-    val endLongitude: Double
-)
-
-val samplePotholes = listOf(
-    Pothole("2024-11-12 08:45", 37.7749, -122.4194),
-    Pothole("2024-11-12 09:15", 37.8044, -122.2711)
-)
-
-val sampleDrops = listOf(
-    Drop("2024-11-12 08:30", 37.7749, -122.4194, 37.8044, -122.2711),
-    Drop("2024-11-12 09:00", 37.8044, -122.2711, 37.7749, -122.4194)
-)
-
 @Composable
-fun Reports() {
+fun Reports(
+    potholes : List<Pothole>,
+    drops : List<Drop>
+) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Potholes", "Drops")
-
-    val potholes = samplePotholes
-    val drops = sampleDrops
 
     Box(
         modifier = Modifier
@@ -116,7 +94,7 @@ fun ReportPothole(report: Pothole) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = "Time: ${report.timestamp}", fontSize = 16.sp)
+            Text(text = "Time: ${report.detectionDate}", fontSize = 16.sp)
             Text(text = "Latitude: ${report.latitude}", fontSize = 16.sp)
             Text(text = "Longitude: ${report.longitude}", fontSize = 16.sp)
         }
@@ -134,7 +112,7 @@ fun ReportDrop(report: Drop) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = "Time: ${report.timestamp}", fontSize = 16.sp)
+            Text(text = "Time: ${report.detectionDate}", fontSize = 16.sp)
             Text(text = "Latitude: ${report.startLatitude} -> ${report.endLatitude}", fontSize = 16.sp)
             Text(text = "Longitude: ${report.startLongitude} -> ${report.endLongitude}", fontSize = 16.sp)
         }
@@ -145,6 +123,5 @@ fun ReportDrop(report: Drop) {
 @Composable
 fun ReportsPreview() {
     RoadSenseTheme {
-        Reports()
     }
 }
