@@ -33,6 +33,5 @@ fun Map(){
 @Composable
 fun MapPreview(){
     RoadSenseTheme {
-        Map()
     }
 }

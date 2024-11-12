@@ -45,14 +45,18 @@ import com.sanpc.roadsense.ui.screen.Profile
 import com.sanpc.roadsense.ui.screen.Register
 import com.sanpc.roadsense.ui.screen.Reports
 import com.sanpc.roadsense.ui.theme.Orange
+import com.sanpc.roadsense.ui.viewmodel.DropViewModel
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
+import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 import com.sanpc.roadsense.utils.UserPreferences
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavigation(
-        context: Context,
-        loginViewModel: LoginViewModel
+    context: Context,
+    loginViewModel: LoginViewModel,
+    potholeViewModel: PotholeViewModel,
+    dropViewModel: DropViewModel
 ) {
     val navController = rememberNavController()
     val userPreferences = UserPreferences(context)
@@ -60,7 +64,6 @@ fun AppNavigation(
     val startDestination = if (userPreferences.isLoggedIn) Routes.HOME else Routes.LOGIN
     val currentDestination by navController.currentBackStackEntryAsState()
     val showBars = currentDestination?.destination?.route != Routes.LOGIN
-
 
     Scaffold (
         topBar = {
@@ -92,20 +95,28 @@ fun AppNavigation(
                     )
                 }
 
-                composable(Routes.MAP){ Map() }
+                composable(Routes.MAP){ Map(
 
-                composable(Routes.REPORTS){ Reports() }
+                    )
+                }
+
+                composable(Routes.REPORTS){ Reports(
+
+                    )
+                }
 
                 composable(Routes.LOGIN) { Login(
-                    context = context,
-                    navController = navController,
-                    loginViewModel = loginViewModel
-                ) }
+                        context = context,
+                        navController = navController,
+                        loginViewModel = loginViewModel
+                    )
+                }
 
                 composable(Routes.REGISTER){ Register(
-                    context = context,
-                    navController = navController
-                ) }
+                        context = context,
+                        navController = navController
+                    )
+                }
             }
         )
     }
