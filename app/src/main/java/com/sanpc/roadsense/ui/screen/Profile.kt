@@ -1,9 +1,6 @@
 package com.sanpc.roadsense.ui.screen
 
-import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,35 +17,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.sanpc.roadsense.ui.navigation.Routes
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 
 @Composable
-fun Profile(username: String, email: String, pass: String, @ApplicationContext context: Context) {
+fun Profile(navController: NavController, username: String, email: String, pass: String) {
     val (usernameState, setUsername) = remember { mutableStateOf(TextFieldValue(username)) }
     val (passState, setPass) = remember { mutableStateOf(TextFieldValue(pass)) }
     val (emailState, setEmail) = remember { mutableStateOf(TextFieldValue(email)) }
 
-    fun logout() {
-        val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            remove("is_logged_in")
-            remove("username")
-            remove("email")
-            remove("password")
-            apply()
-        }
-
-        Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show()
-
-        (context as? Activity)?.finish()
-    }
+    val loginViewModel : LoginViewModel = viewModel()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -115,7 +101,10 @@ fun Profile(username: String, email: String, pass: String, @ApplicationContext c
             )
 
             Button(
-                onClick = { logout() },
+                onClick = {
+                    loginViewModel.logout()
+                    navController.navigate(Routes.LOGIN)
+                },
                 modifier = Modifier
                     .padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(Orange)
@@ -130,6 +119,6 @@ fun Profile(username: String, email: String, pass: String, @ApplicationContext c
 @Composable
 fun ProfilePreview() {
     RoadSenseTheme {
-        Profile(username = "User123", email = "user@example.com", pass = "1234567890", context = LocalContext.current)
+        //Profile(username = "User123", email = "user@example.com", pass = "1234567890", context = LocalContext.current)
     }
 }
