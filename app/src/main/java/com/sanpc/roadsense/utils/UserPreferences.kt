@@ -2,9 +2,8 @@ package com.sanpc.roadsense.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
 
-class UserPreferences(@ApplicationContext context: Context) {
+class UserPreferences(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
     var username: String

@@ -11,11 +11,14 @@ import com.sanpc.roadsense.ui.screen.Map
 import com.sanpc.roadsense.ui.screen.Profile
 import com.sanpc.roadsense.ui.screen.Register
 import com.sanpc.roadsense.ui.screen.Reports
+import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 import com.sanpc.roadsense.utils.UserPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Composable
-fun AppNavigation(@ApplicationContext context: Context) {
+fun AppNavigation(
+        context: Context,
+        loginViewModel: LoginViewModel
+    ) {
     val navController = rememberNavController()
     val userPreferences = UserPreferences(context)
 
@@ -40,7 +43,8 @@ fun AppNavigation(@ApplicationContext context: Context) {
 
             composable(Routes.LOGIN) { Login(
                 context = context,
-                navController = navController
+                navController = navController,
+                loginViewModel = loginViewModel
             ) }
 
             composable(Routes.REGISTER){ Register(

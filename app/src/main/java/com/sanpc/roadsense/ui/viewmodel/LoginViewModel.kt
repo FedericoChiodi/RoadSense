@@ -1,12 +1,16 @@
 package com.sanpc.roadsense.ui.viewmodel
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.sanpc.roadsense.utils.UserPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class LoginViewModel(@ApplicationContext private val context: Context) : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    @ApplicationContext context: Context
+) : ViewModel() {
 
     private val userPreferences = UserPreferences(context)
 
@@ -33,6 +37,5 @@ class LoginViewModel(@ApplicationContext private val context: Context) : ViewMod
 
     fun logout() {
         userPreferences.clear()
-        Toast.makeText(context, "Goodbye!", Toast.LENGTH_SHORT).show()
     }
 }

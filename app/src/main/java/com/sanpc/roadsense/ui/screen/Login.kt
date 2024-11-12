@@ -26,17 +26,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanpc.roadsense.ui.navigation.Routes
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Composable
-fun Login(@ApplicationContext context: Context, navController: NavController){
-    val loginViewModel: LoginViewModel = viewModel()
+fun Login(
+        context: Context,
+        navController: NavController,
+        loginViewModel: LoginViewModel
+    ){
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
