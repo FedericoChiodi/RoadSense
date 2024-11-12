@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id("androidx.room")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -70,6 +71,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
