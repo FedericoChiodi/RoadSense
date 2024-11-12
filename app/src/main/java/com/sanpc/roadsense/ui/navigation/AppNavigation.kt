@@ -1,5 +1,6 @@
 package com.sanpc.roadsense.ui.navigation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 import com.sanpc.roadsense.utils.UserPreferences
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavigation(
         context: Context,
