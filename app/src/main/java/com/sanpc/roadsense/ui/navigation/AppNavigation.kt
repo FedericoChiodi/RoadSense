@@ -23,9 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +40,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sanpc.roadsense.R
+import com.sanpc.roadsense.data.model.Drop
+import com.sanpc.roadsense.data.model.Pothole
 import com.sanpc.roadsense.ui.screen.Home
 import com.sanpc.roadsense.ui.screen.Login
 import com.sanpc.roadsense.ui.screen.Map
@@ -64,6 +68,14 @@ fun AppNavigation(
     val startDestination = if (userPreferences.isLoggedIn) Routes.HOME else Routes.LOGIN
     val currentDestination by navController.currentBackStackEntryAsState()
     val showBars = currentDestination?.destination?.route != Routes.LOGIN
+
+    var potholes by remember { mutableStateOf<List<Pothole>>(emptyList()) }
+    var drops by remember { mutableStateOf<List<Drop>>(emptyList()) }
+
+    LaunchedEffect(userPreferences.username) {
+        potholes = potholeViewModel.getPotholesByUsername(userPreferences.username)
+        drops = dropViewModel.getDropsByUsername(userPreferences.username)
+    }
 
     Scaffold (
         topBar = {
@@ -96,7 +108,9 @@ fun AppNavigation(
                 }
 
                 composable(Routes.MAP){ Map(
-
+                        context = context,
+                        potholes = potholes,
+                        drops = drops
                     )
                 }
 

@@ -13,6 +13,7 @@ kotlinxCoroutinesAndroid = "1.9.0"
 activityCompose = "1.9.3"
 composeBom = "2024.10.01"
 navigationSafeArgsGradlePlugin = "2.8.3"
+osmAndrodCompose = "0.0.5"
 osmdroidAndroid = "6.1.20"
 roomRuntime = "2.6.1"
 symbolProcessingApi = "2.0.21-1.0.27"
@@ -48,6 +49,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+osm-androd-compose = { module = "tech.utsmankece:osm-androd-compose", version = "0.0.3" }
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "symbolProcessingApi" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
