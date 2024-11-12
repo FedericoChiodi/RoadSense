@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,13 +53,14 @@ fun Login(
     Box(
         modifier = Modifier.fillMaxSize()
     ){
-        Image(
-            painter = painterResource(id = R.drawable.background),
-            contentDescription = null,
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .zIndex(-1f)
-                .align(Alignment.TopCenter)
+            .fillMaxSize()
+            .paint(
+                painterResource(id = R.drawable.background),
+                contentScale = ContentScale.FillBounds
+            )
+            .zIndex(-1f)
         )
         Column(
             modifier = Modifier.fillMaxSize()
