@@ -1,6 +1,5 @@
 package com.sanpc.roadsense.ui.screen
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanpc.roadsense.ui.navigation.Routes
 import com.sanpc.roadsense.ui.theme.Orange
@@ -29,12 +27,15 @@ import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 
 @Composable
-fun Profile(navController: NavController, username: String, email: String, pass: String) {
+fun Profile(navController: NavController,
+            username: String,
+            email: String,
+            pass: String,
+            loginViewModel: LoginViewModel
+) {
     val (usernameState, setUsername) = remember { mutableStateOf(TextFieldValue(username)) }
     val (passState, setPass) = remember { mutableStateOf(TextFieldValue(pass)) }
     val (emailState, setEmail) = remember { mutableStateOf(TextFieldValue(email)) }
-
-    val loginViewModel : LoginViewModel = viewModel()
 
     Box(
         modifier = Modifier.fillMaxSize()
