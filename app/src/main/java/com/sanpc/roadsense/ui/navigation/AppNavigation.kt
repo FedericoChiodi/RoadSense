@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sanpc.roadsense.R
 import com.sanpc.roadsense.ui.screen.Home
@@ -51,33 +53,44 @@ import com.sanpc.roadsense.utils.UserPreferences
 fun AppNavigation(
         context: Context,
         loginViewModel: LoginViewModel
-    ) {
+) {
     val navController = rememberNavController()
     val userPreferences = UserPreferences(context)
 
     val startDestination = if (userPreferences.isLoggedIn) Routes.HOME else Routes.LOGIN
+    val currentDestination by navController.currentBackStackEntryAsState()
+    val showBars = currentDestination?.destination?.route != Routes.LOGIN
+
 
     Scaffold (
         topBar = {
-            TopBar()
+            if (showBars){
+                TopBar()
+            }
         },
         bottomBar = {
-            BottomBar(navController)
+            if (showBars){
+                BottomBar(navController)
+            }
         }
     ) {
         NavHost(
             navController = navController,
             startDestination = startDestination,
             builder = {
-                composable(Routes.HOME){ Home() }
+                composable(Routes.HOME){
+                    Home()
+                }
 
-                composable(Routes.PROFILE){ Profile(
-                    username = userPreferences.username,
-                    email = userPreferences.email,
-                    pass = userPreferences.password,
-                    loginViewModel = loginViewModel,
-                    navController = navController
-                ) }
+                composable(Routes.PROFILE){
+                    Profile(
+                        username = userPreferences.username,
+                        email = userPreferences.email,
+                        pass = userPreferences.password,
+                        loginViewModel = loginViewModel,
+                        navController = navController
+                    )
+                }
 
                 composable(Routes.MAP){ Map() }
 
