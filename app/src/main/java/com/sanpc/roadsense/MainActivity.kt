@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RoadSenseTheme {
-                AppNavigation(applicationContext, loginViewModel)
+                AppNavigation(
+                    applicationContext,
+                    loginViewModel
+                )
             }
         }
     }
