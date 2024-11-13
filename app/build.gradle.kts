@@ -104,7 +104,6 @@ dependencies {
 
     // OSM
     implementation(libs.osmdroid.android)
-    implementation(libs.osm.androd.compose)
 
 }
 
