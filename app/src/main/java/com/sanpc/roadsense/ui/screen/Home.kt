@@ -25,7 +25,7 @@ fun Home(
     context: Context,
     locationViewModel: LocationViewModel
 ) {
-    val potholeDetector = remember { PotholeDetector(context, locationViewModel) }
+    val potholeDetector = PotholeDetector(context, locationViewModel)
     var isRecording by remember { mutableStateOf(false) }
     val potholeDataList = remember { mutableStateListOf<Double>() }
 

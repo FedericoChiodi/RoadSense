@@ -3,6 +3,7 @@ package com.sanpc.roadsense.ui.navigation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.ScrollState.Companion.Saver
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +28,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +77,7 @@ fun AppNavigation(
     var potholes by remember { mutableStateOf<List<Pothole>>(emptyList()) }
     var drops by remember { mutableStateOf<List<Drop>>(emptyList()) }
 
-    LaunchedEffect(userPreferences.username) {
+    LaunchedEffect(true) {
         potholes = potholeViewModel.getPotholesByUsername(userPreferences.username)
         drops = dropViewModel.getDropsByUsername(userPreferences.username)
     }
@@ -102,6 +105,13 @@ fun AppNavigation(
                     )
                 }
 
+                composable(Routes.MAP){ Map(
+                    context = context,
+                    potholes = potholes,
+                    drops = drops
+                )
+                }
+
                 composable(Routes.PROFILE){
                     Profile(
                         username = userPreferences.username,
@@ -109,13 +119,6 @@ fun AppNavigation(
                         pass = userPreferences.password,
                         loginViewModel = loginViewModel,
                         navController = navController
-                    )
-                }
-
-                composable(Routes.MAP){ Map(
-                        context = context,
-                        potholes = potholes,
-                        drops = drops
                     )
                 }
 
@@ -192,36 +195,7 @@ fun BottomBar(navigationController: NavController){
                 tint = if (selected.value == Icons.Default.Home) Color.White else Color.DarkGray
             )
         }
-        IconButton(
-            onClick = {
-                selected.value = Icons.Default.Person
-                navigationController.navigate(Routes.PROFILE) {
-                    popUpTo(0)
-                }
-            },
-            modifier = Modifier.weight(1f)
-        ) {
-            Icon(
-                Icons.Default.Person, contentDescription = null, modifier = Modifier.size(26.dp),
-                tint = if (selected.value == Icons.Default.Person) Color.White else Color.DarkGray
-            )
-        }
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            FloatingActionButton(
-                onClick = {
-                    Toast.makeText(context, "Add", Toast.LENGTH_SHORT).show()
-                },
-                containerColor = Color.White,
-                contentColor = Orange
-            ) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Orange)
-            }
-        }
+
         IconButton(
             onClick = {
                 selected.value = Icons.Default.Place
@@ -236,6 +210,24 @@ fun BottomBar(navigationController: NavController){
                 tint = if (selected.value == Icons.Default.Place) Color.White else Color.DarkGray
             )
         }
+
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show()
+                },
+                containerColor = Color.White,
+                contentColor = Orange
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Orange)
+            }
+        }
+
         IconButton(
             onClick = {
                 selected.value = Icons.Default.DateRange
@@ -250,5 +242,21 @@ fun BottomBar(navigationController: NavController){
                 tint = if (selected.value == Icons.Default.DateRange) Color.White else Color.DarkGray
             )
         }
+
+        IconButton(
+            onClick = {
+                selected.value = Icons.Default.Person
+                navigationController.navigate(Routes.PROFILE) {
+                    popUpTo(0)
+                }
+            },
+            modifier = Modifier.weight(1f)
+        ) {
+            Icon(
+                Icons.Default.Person, contentDescription = null, modifier = Modifier.size(26.dp),
+                tint = if (selected.value == Icons.Default.Person) Color.White else Color.DarkGray
+            )
+        }
+
     }
 }

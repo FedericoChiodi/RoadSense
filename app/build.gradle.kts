@@ -7,6 +7,7 @@ plugins {
     id("androidx.room")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {

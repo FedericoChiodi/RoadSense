@@ -11,22 +11,21 @@ espressoCore = "3.6.1"
 kotlinGradlePlugin = "2.0.21"
 kotlinxCoroutinesAndroid = "1.9.0"
 activityCompose = "1.9.3"
-composeBom = "2024.10.01"
-navigationSafeArgsGradlePlugin = "2.8.3"
-osmAndrodCompose = "0.0.5"
+composeBom = "2024.11.00"
+navigationSafeArgsGradlePlugin = "2.8.4"
 osmdroidAndroid = "6.1.20"
 roomRuntime = "2.6.1"
 symbolProcessingApi = "2.0.21-1.0.27"
-navigationCompose = "2.8.3"
+navigationCompose = "2.8.4"
 serialization = "1.7.3"
 accompanistPermissions = "0.36.0"
 playServicesLocation = "21.3.0"
+kotlinPlugin = "1.8.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version = "2.2.0" }
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePlugin" }
-androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationSafeArgsGradlePlugin" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
@@ -64,4 +63,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlinPlugin"  }
 
