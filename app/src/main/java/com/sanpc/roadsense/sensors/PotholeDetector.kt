@@ -6,6 +6,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import com.sanpc.roadsense.data.model.Pothole
+import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
 import com.sanpc.roadsense.utils.UserPreferences
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,6 +18,7 @@ import kotlin.math.abs
 
 class PotholeDetector(
     context: Context,
+    private val locationViewModel: LocationViewModel,
     private val zThreshold: Float = 15f,
     private val bufferSize: Int = 5
 ) : SensorEventListener {
@@ -51,15 +53,21 @@ class PotholeDetector(
                     Date(System.currentTimeMillis())
                 )
 
-                val potholeEvent = Pothole(
-                    username = username,
-                    latitude = 1.0, // sample
-                    longitude = 1.0,
-                    detectionDate = timestamp,
-                    syncStatus = false
-                )
+                locationViewModel.getCurrentLocation()
 
-                _potholeData.tryEmit(potholeEvent)
+                val potholeEvent = locationViewModel.currentLocation?.let {
+                    Pothole(
+                        username = username,
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                        detectionDate = timestamp,
+                        syncStatus = false
+                    )
+                }
+
+                if (potholeEvent != null) {
+                    _potholeData.tryEmit(potholeEvent)
+                }
             }
         }
     }

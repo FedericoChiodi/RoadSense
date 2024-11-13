@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import com.sanpc.roadsense.ui.navigation.AppNavigation
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 import com.sanpc.roadsense.ui.viewmodel.DropViewModel
+import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
     private val potholeViewModel: PotholeViewModel by viewModels()
     private val dropViewModel: DropViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     context = applicationContext,
                     loginViewModel = loginViewModel,
                     potholeViewModel = potholeViewModel,
-                    dropViewModel = dropViewModel
+                    dropViewModel = dropViewModel,
+                    locationViewModel = locationViewModel
                 )
             }
         }

@@ -50,6 +50,7 @@ import com.sanpc.roadsense.ui.screen.Register
 import com.sanpc.roadsense.ui.screen.Reports
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.DropViewModel
+import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
 import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 import com.sanpc.roadsense.utils.UserPreferences
@@ -60,7 +61,8 @@ fun AppNavigation(
     context: Context,
     loginViewModel: LoginViewModel,
     potholeViewModel: PotholeViewModel,
-    dropViewModel: DropViewModel
+    dropViewModel: DropViewModel,
+    locationViewModel: LocationViewModel
 ) {
     val navController = rememberNavController()
     val userPreferences = UserPreferences(context)
@@ -94,7 +96,10 @@ fun AppNavigation(
             startDestination = startDestination,
             builder = {
                 composable(Routes.HOME){
-                    Home()
+                    Home(
+                        context = context,
+                        locationViewModel = locationViewModel
+                    )
                 }
 
                 composable(Routes.PROFILE){
