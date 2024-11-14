@@ -3,7 +3,6 @@ package com.sanpc.roadsense.ui.navigation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.ScrollState.Companion.Saver
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,8 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,18 +42,15 @@ import androidx.navigation.compose.rememberNavController
 import com.sanpc.roadsense.R
 import com.sanpc.roadsense.data.model.Drop
 import com.sanpc.roadsense.data.model.Pothole
-import com.sanpc.roadsense.ui.screen.Home
-import com.sanpc.roadsense.ui.screen.Login
-import com.sanpc.roadsense.ui.screen.Map
-import com.sanpc.roadsense.ui.screen.Profile
-import com.sanpc.roadsense.ui.screen.Register
-import com.sanpc.roadsense.ui.screen.Reports
+import com.sanpc.roadsense.ui.screen.*
 import com.sanpc.roadsense.ui.theme.Orange
-import com.sanpc.roadsense.ui.viewmodel.DropViewModel
-import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
-import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
-import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
+import com.sanpc.roadsense.ui.viewmodel.*
+import com.sanpc.roadsense.utils.MQTTClient
 import com.sanpc.roadsense.utils.UserPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -77,20 +71,35 @@ fun AppNavigation(
     var potholes by remember { mutableStateOf<List<Pothole>>(emptyList()) }
     var drops by remember { mutableStateOf<List<Drop>>(emptyList()) }
 
+    val mqttClient = MQTTClient(
+        username = userPreferences.username,
+        dropViewModel = dropViewModel,
+        potholeViewModel = potholeViewModel
+    )
+
     LaunchedEffect(true) {
         potholes = potholeViewModel.getPotholesByUsername(userPreferences.username)
         drops = dropViewModel.getDropsByUsername(userPreferences.username)
     }
 
-    Scaffold (
+    Scaffold(
         topBar = {
-            if (showBars){
+            if (showBars) {
                 TopBar()
             }
         },
         bottomBar = {
-            if (showBars){
-                BottomBar(navController)
+            if (showBars) {
+                BottomBar(navController) {
+                    Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        mqttClient.connectAndSyncData()
+
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     ) {
@@ -98,21 +107,20 @@ fun AppNavigation(
             navController = navController,
             startDestination = startDestination,
             builder = {
-                composable(Routes.HOME){
+                composable(Routes.HOME) {
                     Home(
                         context = context,
                         locationViewModel = locationViewModel
                     )
                 }
-
-                composable(Routes.MAP){ Map(
-                    context = context,
-                    potholes = potholes,
-                    drops = drops
-                )
+                composable(Routes.MAP) {
+                    Map(
+                        context = context,
+                        potholes = potholes,
+                        drops = drops
+                    )
                 }
-
-                composable(Routes.PROFILE){
+                composable(Routes.PROFILE) {
                     Profile(
                         username = userPreferences.username,
                         email = userPreferences.email,
@@ -121,21 +129,21 @@ fun AppNavigation(
                         navController = navController
                     )
                 }
-
-                composable(Routes.REPORTS){ Reports(
-                    potholes = potholes,
-                    drops = drops
+                composable(Routes.REPORTS) {
+                    Reports(
+                        potholes = potholes,
+                        drops = drops
                     )
                 }
-
-                composable(Routes.LOGIN) { Login(
+                composable(Routes.LOGIN) {
+                    Login(
                         context = context,
                         navController = navController,
                         loginViewModel = loginViewModel
                     )
                 }
-
-                composable(Routes.REGISTER){ Register(
+                composable(Routes.REGISTER) {
+                    Register(
                         context = context,
                         navController = navController
                     )
@@ -147,7 +155,7 @@ fun AppNavigation(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(){
+fun TopBar() {
     val context = LocalContext.current.applicationContext
 
     TopAppBar(
@@ -174,8 +182,7 @@ fun TopBar(){
 }
 
 @Composable
-fun BottomBar(navigationController: NavController){
-    val context = LocalContext.current.applicationContext
+fun BottomBar(navigationController: NavController, onSendClick: () -> Unit) {
     val selected = remember { mutableStateOf(Icons.Default.Home) }
 
     BottomAppBar(
@@ -218,9 +225,7 @@ fun BottomBar(navigationController: NavController){
             contentAlignment = Alignment.Center
         ) {
             FloatingActionButton(
-                onClick = {
-                    Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show()
-                },
+                onClick = onSendClick,
                 containerColor = Color.White,
                 contentColor = Orange
             ) {
@@ -257,6 +262,5 @@ fun BottomBar(navigationController: NavController){
                 tint = if (selected.value == Icons.Default.Person) Color.White else Color.DarkGray
             )
         }
-
     }
 }
