@@ -18,8 +18,6 @@ import org.osmdroid.views.overlay.Polyline
 @Composable
 fun Map(context: Context, potholes: List<Pothole>, drops: List<Drop>) {
     val potholeIcon: Drawable? = context.getDrawable(R.drawable.pothole_icon)
-    val dropIconStart: Drawable? = context.getDrawable(R.drawable.drop_icon_start)
-    val dropIconEnd: Drawable? = context.getDrawable(R.drawable.drop_icon_end)
 
     val center = GeoPoint(44.8385, 11.5195)
 
@@ -33,6 +31,41 @@ fun Map(context: Context, potholes: List<Pothole>, drops: List<Drop>) {
             mapView.controller.setZoom(10.75)
             mapView.isTilesScaledToDpi = true
 
+            drops.forEach { drop ->
+                val startGeoPoint = GeoPoint(drop.startLatitude, drop.startLongitude)
+                val endGeoPoint = GeoPoint(drop.endLatitude, drop.endLongitude)
+
+                val startMarker = Marker(mapView)
+                startMarker.position = startGeoPoint
+                //startMarker.icon = dropIconStart
+                startMarker.setOnMarkerClickListener { _, _ ->
+                    startMarker.title = "Drop Start"
+                    startMarker.snippet = "Start Location: ${startGeoPoint.latitude}, ${startGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
+                    startMarker.showInfoWindow()
+                    true
+                }
+
+                val endMarker = Marker(mapView)
+                endMarker.position = endGeoPoint
+                //endMarker.icon = dropIconEnd
+                endMarker.setOnMarkerClickListener { _, _ ->
+                    endMarker.title = "Drop End"
+                    endMarker.snippet = "End Location: ${endGeoPoint.latitude}, ${endGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
+                    endMarker.showInfoWindow()
+                    true
+                }
+
+                val line = Polyline()
+                line.addPoint(startGeoPoint)
+                line.addPoint(endGeoPoint)
+                line.outlinePaint.strokeWidth = 7f
+                line.outlinePaint.color = context.getColor(R.color.black)
+                mapView.overlays.add(line)
+
+                mapView.overlays.add(startMarker)
+                mapView.overlays.add(endMarker)
+            }
+
             potholes.forEach { pothole ->
                 val geoPoint = GeoPoint(pothole.latitude, pothole.longitude)
                 val marker = Marker(mapView)
@@ -45,41 +78,6 @@ fun Map(context: Context, potholes: List<Pothole>, drops: List<Drop>) {
                     true
                 }
                 mapView.overlays.add(marker)
-            }
-
-            drops.forEach { drop ->
-                val startGeoPoint = GeoPoint(drop.startLatitude, drop.startLongitude)
-                val endGeoPoint = GeoPoint(drop.endLatitude, drop.endLongitude)
-
-                val startMarker = Marker(mapView)
-                startMarker.position = startGeoPoint
-                startMarker.icon = dropIconStart
-                startMarker.setOnMarkerClickListener { _, _ ->
-                    startMarker.title = "Drop Start"
-                    startMarker.snippet = "Start Location: ${startGeoPoint.latitude}, ${startGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
-                    startMarker.showInfoWindow()
-                    true
-                }
-
-                val endMarker = Marker(mapView)
-                endMarker.position = endGeoPoint
-                endMarker.icon = dropIconEnd
-                endMarker.setOnMarkerClickListener { _, _ ->
-                    endMarker.title = "Drop End"
-                    endMarker.snippet = "End Location: ${endGeoPoint.latitude}, ${endGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
-                    endMarker.showInfoWindow()
-                    true
-                }
-
-                mapView.overlays.add(startMarker)
-                mapView.overlays.add(endMarker)
-
-                val line = Polyline()
-                line.addPoint(startGeoPoint)
-                line.addPoint(endGeoPoint)
-                line.outlinePaint.strokeWidth = 7f
-                line.outlinePaint.color = context.getColor(R.color.black)
-                mapView.overlays.add(line)
             }
 
             mapView
