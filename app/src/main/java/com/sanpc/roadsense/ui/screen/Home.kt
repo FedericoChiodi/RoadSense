@@ -1,98 +1,106 @@
 package com.sanpc.roadsense.ui.screen
 
-import android.Manifest
 import android.content.Context
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import androidx.compose.ui.unit.sp
 import com.sanpc.roadsense.sensors.PotholeDetector
-import com.sanpc.roadsense.ui.theme.Orange
-import com.sanpc.roadsense.ui.theme.RoadSenseTheme
+import com.sanpc.roadsense.sensors.DropDetector
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
+import com.sanpc.roadsense.ui.theme.Orange
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Home(
     context: Context,
     locationViewModel: LocationViewModel
 ) {
-    val potholeDetector = PotholeDetector(context, locationViewModel)
-    var isRecording by remember { mutableStateOf(false) }
-    val potholeDataList = remember { mutableStateListOf<Double>() }
+    val scope = rememberCoroutineScope()
+    val potholeDetector = remember { PotholeDetector(context, locationViewModel) }
+    val dropDetector = remember { DropDetector(context, locationViewModel) }
 
-    val locationPermissions = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    )
-
-    LaunchedEffect(true) {
-        locationPermissions.launchMultiplePermissionRequest()
-    }
-
-    LaunchedEffect(isRecording) {
-        if (isRecording) {
-            potholeDetector.potholeData.collect { pothole ->
-                potholeDataList.apply {
-                    clear()
-                    add(pothole.latitude)
-                    add(pothole.longitude)
-                }
-            }
-        }
-    }
+    var isPotholeDetectionActive by remember { mutableStateOf(false) }
+    var isDropDetectionActive by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
             onClick = {
-                isRecording = !isRecording
-                if (isRecording) {
-                    potholeDetector.startDetection()
-                } else {
+                if (isPotholeDetectionActive) {
                     potholeDetector.stopDetection()
+                } else {
+                    potholeDetector.startDetection()
                 }
+                isPotholeDetectionActive = !isPotholeDetectionActive
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Orange
-            )
+                containerColor = if (isPotholeDetectionActive) Orange.copy(alpha = 0.85f) else Orange
+            ),
+            modifier = Modifier.padding(bottom = 16.dp)
         ) {
-            Text(text = if (isRecording) "Stop Recording" else "Start Recording")
+            Text(
+                text = if (isPotholeDetectionActive) "Stop Pothole Detection" else "Start Pothole Detection",
+                color = Color.White,
+                fontSize = 20.sp
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(
+            modifier = Modifier.padding(bottom = 26.dp)
+        )
 
-        Text(text = "Measures:")
-        LazyRow(
-            modifier = Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Button(
+            onClick = {
+                if (isDropDetectionActive) {
+                    dropDetector.stopDetection()
+                } else {
+                    dropDetector.startDetection()
+                }
+                isDropDetectionActive = !isDropDetectionActive
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isDropDetectionActive) Orange.copy(alpha = 0.85f) else Orange
+            ),
+            modifier = Modifier.padding(bottom = 16.dp)
         ) {
-            items(potholeDataList.size) { index ->
-                Text(text = potholeDataList[index].toString())
+            Text(
+                text = if (isDropDetectionActive) "Stop Drop Detection" else "Start Drop Detection",
+                color = Color.White,
+                fontSize = 20.sp
+            )
+        }
+
+        LaunchedEffect(potholeDetector) {
+            scope.launch {
+                potholeDetector.potholeData.collect {
+                    Toast.makeText(context, "Pothole Detected!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    }
-}
 
-
-@Preview
-@Composable
-fun HomePreview(){
-    RoadSenseTheme {
+        LaunchedEffect(dropDetector) {
+            scope.launch {
+                dropDetector.dropData.collect {
+                    Toast.makeText(context, "Drop Detected!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
