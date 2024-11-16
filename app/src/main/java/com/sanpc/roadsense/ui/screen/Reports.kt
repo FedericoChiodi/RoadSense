@@ -46,7 +46,7 @@ fun Reports(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(40.dp)
+            .padding(60.dp)
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopCenter),

@@ -61,7 +61,7 @@ fun Login(
         )
         Column(
             modifier = Modifier.fillMaxSize()
-                .padding(horizontal = 26.dp, vertical = 110.dp),
+                .padding(horizontal = 26.dp, vertical = 175.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
