@@ -30,16 +30,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sanpc.roadsense.data.model.Drop
 import com.sanpc.roadsense.data.model.Pothole
+import com.sanpc.roadsense.ui.theme.LightGreen
+import com.sanpc.roadsense.ui.theme.LightRed
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 import java.util.Locale
 
 @Composable
 fun Reports(
-    potholes : List<Pothole>,
-    drops : List<Drop>
+    potholes: List<Pothole>,
+    drops: List<Drop>
 ) {
-
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Potholes", "Drops")
 
@@ -99,14 +100,16 @@ fun Reports(
     }
 }
 
-
 @Composable
 fun ReportPothole(report: Pothole) {
+    val cardBackgroundColor = if (report.syncStatus) LightGreen else LightRed
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -120,11 +123,14 @@ fun ReportPothole(report: Pothole) {
 
 @Composable
 fun ReportDrop(report: Drop) {
+    val cardBackgroundColor = if (report.syncStatus) LightGreen else LightRed
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -146,3 +152,4 @@ fun ReportsPreview() {
     RoadSenseTheme {
     }
 }
+
