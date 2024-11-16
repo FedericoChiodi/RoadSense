@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,6 +71,7 @@ fun Profile(navController: NavController,
             OutlinedTextField(
                 value = passState,
                 onValueChange = setPass,
+                visualTransformation = PasswordVisualTransformation(),
                 label = { Text("Password", color = Orange) },
                 readOnly = true,
                 colors = TextFieldDefaults.colors(
