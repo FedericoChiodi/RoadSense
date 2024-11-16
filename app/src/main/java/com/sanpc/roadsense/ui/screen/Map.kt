@@ -51,7 +51,7 @@ fun Map(
                     mapView.setMultiTouchControls(true)
                     mapView.controller.setCenter(userLocation)
                     mapView.controller.setZoom(10.75)
-                    mapView.isTilesScaledToDpi = true
+                    mapView.isTilesScaledToDpi = false
 
                     drops.forEach { drop ->
                         val startGeoPoint = GeoPoint(drop.startLatitude, drop.startLongitude)
