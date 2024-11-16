@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,19 +69,14 @@ fun AppNavigation(
     val currentDestination by navController.currentBackStackEntryAsState()
     val showBars = currentDestination?.destination?.route != Routes.LOGIN
 
-    var potholes by remember { mutableStateOf<List<Pothole>>(emptyList()) }
-    var drops by remember { mutableStateOf<List<Drop>>(emptyList()) }
+    val potholes by potholeViewModel.getPotholesByUsername(userPreferences.username).collectAsState(initial = emptyList())
+    val drops by dropViewModel.getDropsByUsername(userPreferences.username).collectAsState(initial = emptyList())
 
     val mqttClient = MQTTClient(
         username = userPreferences.username,
         dropViewModel = dropViewModel,
         potholeViewModel = potholeViewModel
     )
-
-    LaunchedEffect(true) {
-        potholes = potholeViewModel.getPotholesByUsername(userPreferences.username)
-        drops = dropViewModel.getDropsByUsername(userPreferences.username)
-    }
 
     Scaffold(
         topBar = {
@@ -110,6 +106,8 @@ fun AppNavigation(
                 composable(Routes.HOME) {
                     Home(
                         context = context,
+                        potholeViewModel = potholeViewModel,
+                        dropViewModel = dropViewModel,
                         locationViewModel = locationViewModel
                     )
                 }

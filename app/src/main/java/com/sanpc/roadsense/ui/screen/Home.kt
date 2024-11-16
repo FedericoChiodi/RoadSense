@@ -16,12 +16,16 @@ import androidx.compose.ui.unit.sp
 import com.sanpc.roadsense.sensors.PotholeDetector
 import com.sanpc.roadsense.sensors.DropDetector
 import com.sanpc.roadsense.ui.theme.Orange
+import com.sanpc.roadsense.ui.viewmodel.DropViewModel
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
+import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun Home(
     context: Context,
+    potholeViewModel: PotholeViewModel,
+    dropViewModel: DropViewModel,
     locationViewModel: LocationViewModel
 ) {
     rememberCoroutineScope()
@@ -47,6 +51,7 @@ fun Home(
 
     LaunchedEffect(potholeData.value) {
         potholeData.value?.let {
+            potholeViewModel.insert(potholeData.value!!)
             potholeDetected = true
             greenBoxTimer = true
             delay(1250)
@@ -56,6 +61,7 @@ fun Home(
 
     LaunchedEffect(dropData.value) {
         dropData.value?.let {
+            dropViewModel.insert(dropData.value!!)
             dropDetected = true
             greenBoxTimerDrop = true
             delay(1250)
