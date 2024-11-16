@@ -21,6 +21,7 @@ serialization = "1.7.3"
 accompanistPermissions = "0.36.0"
 playServicesLocation = "21.3.0"
 kotlinPlugin = "1.8.10"
+accompanistPager = "0.36.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +57,7 @@ symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-ap
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanistPager" }
 
 
 [plugins]
