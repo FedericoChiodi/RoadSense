@@ -11,6 +11,9 @@ interface DropDao {
     @Insert
     suspend fun insert(drop: Drop)
 
+    @Query("DELETE FROM drops")
+    suspend fun clearDrops()
+
     @Query("SELECT * FROM drops WHERE syncStatus = 0")
     suspend fun getUnsyncedDrops(): List<Drop>
 

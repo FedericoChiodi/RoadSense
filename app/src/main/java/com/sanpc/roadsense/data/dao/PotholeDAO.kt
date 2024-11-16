@@ -11,6 +11,9 @@ interface PotholeDao {
     @Insert
     suspend fun insert(pothole: Pothole)
 
+    @Query("DELETE FROM potholes")
+    suspend fun clearPotholes()
+
     @Query("SELECT * FROM potholes WHERE syncStatus = 0")
     suspend fun getUnsyncedPotholes(): List<Pothole>
 

@@ -12,6 +12,10 @@ class DropRepository @Inject constructor(
         dropDao.insert(drop)
     }
 
+    suspend fun clearDrops() {
+        dropDao.clearDrops()
+    }
+
     suspend fun getUnsyncedDrops(): List<Drop> {
         return dropDao.getUnsyncedDrops()
     }

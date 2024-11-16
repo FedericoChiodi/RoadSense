@@ -12,6 +12,10 @@ class PotholeRepository @Inject constructor(
         potholeDao.insert(pothole)
     }
 
+    suspend fun clearPotholes() {
+        potholeDao.clearPotholes()
+    }
+
     suspend fun getUnsyncedPotholes(): List<Pothole> {
         return potholeDao.getUnsyncedPotholes()
     }

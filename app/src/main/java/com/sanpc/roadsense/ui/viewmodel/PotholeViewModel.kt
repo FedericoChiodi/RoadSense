@@ -23,6 +23,10 @@ class PotholeViewModel @Inject constructor(
         potholeRepository.insert(pothole)
     }
 
+    suspend fun clearPotholes() {
+        potholeRepository.clearPotholes()
+    }
+
     suspend fun getUnsyncedPotholes() : List<Pothole> {
         return potholeRepository.getUnsyncedPotholes()
     }
