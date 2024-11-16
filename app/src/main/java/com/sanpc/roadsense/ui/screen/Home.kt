@@ -17,6 +17,7 @@ import com.sanpc.roadsense.sensors.PotholeDetector
 import com.sanpc.roadsense.sensors.DropDetector
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun Home(
@@ -31,8 +32,36 @@ fun Home(
     var isPotholeDetectionActive by remember { mutableStateOf(false) }
     var isDropDetectionActive by remember { mutableStateOf(false) }
 
+    var potholeDetected by remember { mutableStateOf(false) }
+    var dropDetected by remember { mutableStateOf(false) }
+
+    var greenBoxTimer by remember { mutableStateOf(false) }
+    var greenBoxTimerDrop by remember { mutableStateOf(false) }
+
+    val potholeData = potholeDetector.potholeData.collectAsState(initial = null)
+    val dropData = dropDetector.dropData.collectAsState(initial = null)
+
     val potholeLevel by potholeDetector.zValue.collectAsState(initial = 0f)
     val gyroLevel by dropDetector.gyroLevel.collectAsState(initial = 0f)
+
+
+    LaunchedEffect(potholeData.value) {
+        potholeData.value?.let {
+            potholeDetected = true
+            greenBoxTimer = true
+            delay(2000)
+            greenBoxTimer = false
+        }
+    }
+
+    LaunchedEffect(dropData.value) {
+        dropData.value?.let {
+            dropDetected = true
+            greenBoxTimerDrop = true
+            delay(2000)
+            greenBoxTimerDrop = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -45,7 +74,10 @@ fun Home(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color.LightGray, RoundedCornerShape(10.dp))
+                .background(
+                    if (greenBoxTimer) Color.Green else Color.LightGray,
+                    RoundedCornerShape(10.dp)
+                )
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -88,7 +120,10 @@ fun Home(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color.LightGray, RoundedCornerShape(10.dp))
+                .background(
+                    if (greenBoxTimerDrop) Color.Green else Color.LightGray,
+                    RoundedCornerShape(10.dp)
+                )
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -126,3 +161,4 @@ fun Home(
         }
     }
 }
+
