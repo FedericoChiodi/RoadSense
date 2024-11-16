@@ -49,7 +49,7 @@ fun Home(
         potholeData.value?.let {
             potholeDetected = true
             greenBoxTimer = true
-            delay(2000)
+            delay(1250)
             greenBoxTimer = false
         }
     }
@@ -58,7 +58,7 @@ fun Home(
         dropData.value?.let {
             dropDetected = true
             greenBoxTimerDrop = true
-            delay(2000)
+            delay(1250)
             greenBoxTimerDrop = false
         }
     }

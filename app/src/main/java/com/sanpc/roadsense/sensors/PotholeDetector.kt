@@ -10,31 +10,26 @@ import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
 import com.sanpc.roadsense.utils.UserPreferences
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.abs
 
-
 class PotholeDetector(
     context: Context,
     private val locationViewModel: LocationViewModel,
-    private val zThreshold: Float = 15f,
-    private val bufferSize: Int = 5
+    private val zThreshold: Float = 35f
 ) : SensorEventListener {
 
-    private val _potholeData = MutableSharedFlow<Pothole>()
+    private val _potholeData = MutableSharedFlow<Pothole>(replay = 1)
     val potholeData = _potholeData.asSharedFlow()
 
-    private val _zValue = MutableSharedFlow<Float>()
+    private val _zValue = MutableSharedFlow<Float>(replay = 1)
     val zValue = _zValue.asSharedFlow()
 
     private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-    private val zBuffer = ArrayDeque<Float>(bufferSize)
-
-    val username = UserPreferences(context).username
+    private val username = UserPreferences(context).username
 
     fun startDetection() {
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
@@ -48,14 +43,9 @@ class PotholeDetector(
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             val zValue = event.values[2]
             _zValue.tryEmit(zValue)
-            addToBuffer(zValue)
 
-            val averageZ = zBuffer.average().toFloat()
-
-            if (abs(averageZ) > zThreshold) {
-                val timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
-                    Date(System.currentTimeMillis())
-                )
+            if (abs(zValue) > zThreshold) {
+                val timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
 
                 locationViewModel.getCurrentLocation()
 
@@ -69,18 +59,9 @@ class PotholeDetector(
                     )
                 }
 
-                if (potholeEvent != null) {
-                    _potholeData.tryEmit(potholeEvent)
-                }
+                potholeEvent?.let { _potholeData.tryEmit(it) }
             }
         }
-    }
-
-    private fun addToBuffer(zValue: Float) {
-        if (zBuffer.size >= bufferSize) {
-            zBuffer.removeFirst()
-        }
-        zBuffer.addLast(zValue)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {

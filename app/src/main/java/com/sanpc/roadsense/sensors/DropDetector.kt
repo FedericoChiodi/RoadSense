@@ -20,7 +20,7 @@ import kotlin.math.sqrt
 class DropDetector(
     context: Context,
     private val locationViewModel: LocationViewModel,
-    private val startThreshold: Float = 45f,
+    private val startThreshold: Float = 60f,
     private val endThreshold: Float = 5f
 ) : SensorEventListener {
 
