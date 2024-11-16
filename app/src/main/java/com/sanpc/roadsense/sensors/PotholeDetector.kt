@@ -26,6 +26,9 @@ class PotholeDetector(
     private val _potholeData = MutableSharedFlow<Pothole>()
     val potholeData = _potholeData.asSharedFlow()
 
+    private val _zValue = MutableSharedFlow<Float>()
+    val zValue = _zValue.asSharedFlow()
+
     private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
@@ -44,6 +47,7 @@ class PotholeDetector(
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             val zValue = event.values[2]
+            _zValue.tryEmit(zValue)
             addToBuffer(zValue)
 
             val averageZ = zBuffer.average().toFloat()

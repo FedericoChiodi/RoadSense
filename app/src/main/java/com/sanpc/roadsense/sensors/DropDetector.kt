@@ -25,6 +25,9 @@ class DropDetector(
     private val _dropData = MutableSharedFlow<Drop>()
     val dropData = _dropData.asSharedFlow()
 
+    private val _gyroLevel = MutableSharedFlow<Float>()
+    val gyroLevel = _gyroLevel.asSharedFlow()
+
     private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val gyroscope: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 
@@ -45,6 +48,7 @@ class DropDetector(
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
             val zRotationRate = event.values[2]
+            _gyroLevel.tryEmit(zRotationRate)
 
             if (abs(zRotationRate) > startThreshold && !isDropStarted) {
                 isDropStarted = true
