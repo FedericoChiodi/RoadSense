@@ -17,7 +17,12 @@ class LoginViewModel @Inject constructor(
     private val validCredentials = listOf(
         Triple("fc", "pass", "federico.chiodi@edu.unife.it"),
         Triple("cg", "pass", "cg@unife.it"),
-        Triple("mt", "pass", "mt@unife.it")
+        Triple("mt", "pass", "mt@unife.it"),
+        Triple("pv", "pass", "pv@gmail.com"),
+        Triple("dc", "pass", "dc@gmail.com"),
+        Triple("mb", "buga!", "mb@gmail.com"),
+        Triple("ff", "bang!", "ff@gmail.com"),
+        Triple("eb", "blast!", "eb@gmail.com")
     )
 
     // POC - in production this checks users from DB and gets info from there
