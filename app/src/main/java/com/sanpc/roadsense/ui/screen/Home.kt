@@ -17,21 +17,22 @@ import com.sanpc.roadsense.sensors.PotholeDetector
 import com.sanpc.roadsense.sensors.DropDetector
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun Home(
     context: Context,
     locationViewModel: LocationViewModel
 ) {
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
+
     val potholeDetector = remember { PotholeDetector(context, locationViewModel) }
     val dropDetector = remember { DropDetector(context, locationViewModel) }
 
     var isPotholeDetectionActive by remember { mutableStateOf(false) }
     var isDropDetectionActive by remember { mutableStateOf(false) }
-    var potholeLevel by remember { mutableFloatStateOf(0f) }
-    var gyroLevel by remember { mutableFloatStateOf(0f) }
+
+    val potholeLevel by potholeDetector.zValue.collectAsState(initial = 0f)
+    val gyroLevel by dropDetector.gyroLevel.collectAsState(initial = 0f)
 
     Column(
         modifier = Modifier
@@ -121,22 +122,6 @@ fun Home(
                     fontSize = 14.sp,
                     color = Color.Black
                 )
-            }
-        }
-    }
-
-    LaunchedEffect(potholeDetector) {
-        scope.launch {
-            potholeDetector.zValue.collect { value ->
-                potholeLevel = value
-            }
-        }
-    }
-
-    LaunchedEffect(dropDetector) {
-        scope.launch {
-            dropDetector.gyroLevel.collect { value ->
-                gyroLevel = value
             }
         }
     }
