@@ -5,8 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import com.sanpc.roadsense.ui.navigation.AppNavigation
-import com.sanpc.roadsense.ui.theme.RoadSenseTheme
 import com.sanpc.roadsense.ui.viewmodel.DropViewModel
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
@@ -24,7 +25,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RoadSenseTheme {
+            MaterialTheme(
+                colorScheme = lightColorScheme()
+            )
+            {
                 AppNavigation(
                     context = applicationContext,
                     loginViewModel = loginViewModel,
