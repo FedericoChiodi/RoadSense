@@ -83,7 +83,9 @@ fun Reports(
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 125.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (selectedTabIndex == 0) {
