@@ -21,8 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +32,7 @@ import com.sanpc.roadsense.data.model.Drop
 import com.sanpc.roadsense.data.model.Pothole
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
+import java.util.Locale
 
 @Composable
 fun Reports(
@@ -113,8 +112,8 @@ fun ReportPothole(report: Pothole) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = "Time: ${report.detectionDate}", fontSize = 16.sp)
-            Text(text = "Latitude: ${report.latitude}", fontSize = 16.sp)
-            Text(text = "Longitude: ${report.longitude}", fontSize = 16.sp)
+            Text(text = "Latitude: ${report.latitude.formatCoordinate()}", fontSize = 16.sp)
+            Text(text = "Longitude: ${report.longitude.formatCoordinate()}", fontSize = 16.sp)
         }
     }
 }
@@ -131,11 +130,15 @@ fun ReportDrop(report: Drop) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = "Time: ${report.detectionDate}", fontSize = 16.sp)
-            Text(text = "Latitude: ${report.startLatitude} -> ${report.endLatitude}", fontSize = 16.sp)
-            Text(text = "Longitude: ${report.startLongitude} -> ${report.endLongitude}", fontSize = 16.sp)
+            Text(text = "S_lat: ${report.startLatitude.formatCoordinate()}", fontSize = 16.sp)
+            Text(text = "S_lon: ${report.startLongitude.formatCoordinate()}", fontSize = 16.sp)
+            Text(text = "E_lat: ${report.endLatitude.formatCoordinate()}", fontSize = 16.sp)
+            Text(text = "E_lon: ${report.endLongitude.formatCoordinate()}", fontSize = 16.sp)
         }
     }
 }
+
+private fun Double.formatCoordinate(): String = String.format(Locale.getDefault(), "%.4f", this)
 
 @Preview
 @Composable
