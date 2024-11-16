@@ -7,7 +7,6 @@ import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.apache.http.conn.ConnectTimeoutException
 import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 
@@ -53,9 +52,6 @@ class MQTTClient(
                     when (exception) {
                         is com.hivemq.client.mqtt.exceptions.ConnectionClosedException -> {
                             println("Il server ha chiuso la connessione senza DISCONNECT.")
-                        }
-                        is ConnectTimeoutException -> {
-                            println("Timeout di connessione al broker.")
                         }
                         else -> {
                             println("Errore generico nella connessione.")
