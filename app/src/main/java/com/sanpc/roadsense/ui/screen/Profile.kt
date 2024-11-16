@@ -1,5 +1,6 @@
 package com.sanpc.roadsense.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,14 +26,18 @@ import androidx.navigation.NavController
 import com.sanpc.roadsense.ui.navigation.Routes
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.theme.RoadSenseTheme
+import com.sanpc.roadsense.ui.viewmodel.DropViewModel
 import com.sanpc.roadsense.ui.viewmodel.LoginViewModel
+import com.sanpc.roadsense.ui.viewmodel.PotholeViewModel
 
 @Composable
 fun Profile(navController: NavController,
             username: String,
             email: String,
             pass: String,
-            loginViewModel: LoginViewModel
+            loginViewModel: LoginViewModel,
+            potholeViewModel: PotholeViewModel,
+            dropViewModel: DropViewModel
 ) {
     val (usernameState, setUsername) = remember { mutableStateOf(TextFieldValue(username)) }
     val (passState, setPass) = remember { mutableStateOf(TextFieldValue(pass)) }
@@ -113,6 +118,19 @@ fun Profile(navController: NavController,
                 colors = ButtonDefaults.buttonColors(Orange)
             ) {
                 Text("Logout", color = Color.White)
+            }
+
+            Button(
+                onClick = {
+                    potholeViewModel.clearPotholes()
+                    dropViewModel.clearDrops()
+                    Toast.makeText(navController.context, "All reports deleted!", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .padding(top = 16.dp),
+                colors = ButtonDefaults.buttonColors(Orange)
+            ) {
+                Text("Delete my Reports", color = Color.White)
             }
         }
     }

@@ -22,8 +22,10 @@ class DropViewModel @Inject constructor(
         dropRepository.insert(drop)
     }
 
-    suspend fun clearDrops() {
-        dropRepository.clearDrops()
+    fun clearDrops() {
+        viewModelScope.launch {
+            dropRepository.clearDrops()
+        }
     }
 
     suspend fun getUnsyncedDrops() : List<Drop> {

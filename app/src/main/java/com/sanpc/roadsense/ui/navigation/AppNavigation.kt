@@ -125,7 +125,9 @@ fun AppNavigation(
                         email = userPreferences.email,
                         pass = userPreferences.password,
                         loginViewModel = loginViewModel,
-                        navController = navController
+                        navController = navController,
+                        potholeViewModel = potholeViewModel,
+                        dropViewModel = dropViewModel
                     )
                 }
                 composable(Routes.REPORTS) {
