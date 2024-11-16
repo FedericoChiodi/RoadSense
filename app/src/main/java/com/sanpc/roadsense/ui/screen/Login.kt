@@ -2,20 +2,17 @@ package com.sanpc.roadsense.ui.screen
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -120,12 +117,14 @@ fun Login(
                 Text(text = "Login", fontSize = 22.sp)
             }
 
+            /*
             TextButton(
                 onClick = { navController.navigate(Routes.REGISTER) },
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text(text = "Non hai un account? Registrati", color = Orange)
             }
+            */
         }
     }
 }
