@@ -10,18 +10,28 @@ import com.sanpc.roadsense.utils.LocationTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 
 @HiltViewModel
 class LocationViewModel @Inject constructor(
     private val locationTracker: LocationTracker
-) : ViewModel(){
+) : ViewModel() {
 
     var currentLocation by mutableStateOf<Location?>(null)
+        private set
+
+    var locationGeopoint by mutableStateOf<GeoPoint?>(null)
+        private set
 
     fun getCurrentLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            currentLocation = locationTracker.getCurrentLocation()
+            val location = locationTracker.getCurrentLocation()
+
+            location?.let {
+                currentLocation = it
+                locationGeopoint = GeoPoint(it.latitude, it.longitude)
+            }
         }
     }
 }

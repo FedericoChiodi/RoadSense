@@ -138,7 +138,7 @@ fun ReportDrop(report: Drop) {
     }
 }
 
-private fun Double.formatCoordinate(): String = String.format(Locale.getDefault(), "%.4f", this)
+private fun Double.formatCoordinate(): String = String.format(Locale.getDefault(), "%.7f", this)
 
 @Preview
 @Composable

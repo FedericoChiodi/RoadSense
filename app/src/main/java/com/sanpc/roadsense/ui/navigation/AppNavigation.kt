@@ -117,7 +117,8 @@ fun AppNavigation(
                     Map(
                         context = context,
                         potholes = potholes,
-                        drops = drops
+                        drops = drops,
+                        locationViewModel = locationViewModel
                     )
                 }
                 composable(Routes.PROFILE) {
