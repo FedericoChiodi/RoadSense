@@ -30,17 +30,20 @@ class DropDetector(
     private val _gyroLevel = MutableSharedFlow<Float>(replay = 1)
     val gyroLevel = _gyroLevel.asSharedFlow()
 
-    private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private val sensorManager: SensorManager =
+        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-    private val username = UserPreferences(context).username
+    private val username: String = UserPreferences(context).username
 
     private var isDropStarted = false
     private var startLatitude: Double? = null
     private var startLongitude: Double? = null
 
     fun startDetection() {
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
+        accelerometer?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        } ?: Log.e("DropDetector", "Accelerometer not available")
     }
 
     fun stopDetection() {
@@ -55,48 +58,48 @@ class DropDetector(
 
             val angle = atan2(accY.toDouble(), sqrt((accX * accX + accZ * accZ).toDouble())) * (180 / Math.PI)
 
-            if(_gyroLevel.tryEmit(angle.toFloat()))
-                Log.d("DropDetector", "Inclinazione angolare: $angle")
+            _gyroLevel.tryEmit(angle.toFloat())
+
+            Log.d("DropDetector", "Inclinazione angolare: $angle")
 
             if (abs(angle) > startThreshold && !isDropStarted) {
                 isDropStarted = true
-                locationViewModel.getCurrentLocation()
-
-                locationViewModel.currentLocation?.let { location ->
-                    startLatitude = location.latitude
-                    startLongitude = location.longitude
-                } ?: run {
-                    isDropStarted = false
+                retrieveLocation { latitude, longitude ->
+                    if (latitude != null && longitude != null) {
+                        startLatitude = latitude
+                        startLongitude = longitude
+                    } else {
+                        isDropStarted = false
+                    }
                 }
             } else if (abs(angle) < endThreshold && isDropStarted) {
                 isDropStarted = false
-                locationViewModel.getCurrentLocation()
+                retrieveLocation { latitude, longitude ->
+                    if (latitude != null && longitude != null && startLatitude != null && startLongitude != null) {
+                        val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                            .format(System.currentTimeMillis())
 
-                locationViewModel.currentLocation?.let { location ->
-                    val endLatitude = location.latitude
-                    val endLongitude = location.longitude
-                    val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                        .format(System.currentTimeMillis())
-
-                    if (startLatitude != null && startLongitude != null) {
                         val dropEvent = Drop(
                             username = username,
                             startLatitude = startLatitude!!,
                             startLongitude = startLongitude!!,
-                            endLatitude = endLatitude,
-                            endLongitude = endLongitude,
+                            endLatitude = latitude,
+                            endLongitude = longitude,
                             detectionDate = timestamp,
                             syncStatus = false
                         )
                         _dropData.tryEmit(dropEvent)
                     }
-                } ?: run {
-                    isDropStarted = false
                 }
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-}
 
+    private fun retrieveLocation(callback: (Double?, Double?) -> Unit) {
+        locationViewModel.getCurrentLocation()
+        val location = locationViewModel.currentLocation
+        callback(location?.latitude, location?.longitude)
+    }
+}
