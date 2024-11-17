@@ -17,7 +17,7 @@ import kotlin.math.abs
 class PotholeDetector(
     context: Context,
     private val locationViewModel: LocationViewModel,
-    private val zThreshold: Float = 40f
+    private val zThreshold: Float = 37f
 ) : SensorEventListener {
 
     private val _potholeData = MutableSharedFlow<Pothole>(replay = 1)
