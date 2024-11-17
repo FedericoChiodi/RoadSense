@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sanpc.roadsense.sensors.PotholeDetector
 import com.sanpc.roadsense.sensors.DropDetector
+import com.sanpc.roadsense.ui.theme.LightGreen
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.DropViewModel
 import com.sanpc.roadsense.ui.viewmodel.LocationViewModel
@@ -81,7 +82,7 @@ fun Home(
                 .fillMaxWidth()
                 .height(200.dp)
                 .background(
-                    if (greenBoxTimer) Color.Green else Color.LightGray,
+                    if (greenBoxTimer) LightGreen else Color.LightGray,
                     RoundedCornerShape(10.dp)
                 )
                 .padding(16.dp),
@@ -127,7 +128,7 @@ fun Home(
                 .fillMaxWidth()
                 .height(200.dp)
                 .background(
-                    if (greenBoxTimerDrop) Color.Green else Color.LightGray,
+                    if (greenBoxTimerDrop) LightGreen else Color.LightGray,
                     RoundedCornerShape(10.dp)
                 )
                 .padding(16.dp),
