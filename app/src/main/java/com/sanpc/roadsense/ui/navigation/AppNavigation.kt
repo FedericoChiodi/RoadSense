@@ -3,9 +3,17 @@ package com.sanpc.roadsense.ui.navigation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.DateRange
@@ -15,13 +23,16 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -170,30 +182,62 @@ fun AppNavigation(
 
 @Composable
 fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Confirm Action") },
-        text = { Text("Do you want to send the data?") },
-        containerColor = Color.White,
-        confirmButton = {
-            androidx.compose.material3.Button(
-                onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = Orange),
-                modifier = Modifier.padding(end = 8.dp)
+    Dialog(
+        onDismissRequest = onDismiss
+    ) {
+        Card (
+            modifier = Modifier
+                .padding(16.dp)
+                .height(230.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        ){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Yes", color = Color.White)
-            }
-        },
-        dismissButton = {
-            androidx.compose.material3.Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = Orange),
-                        modifier = Modifier.padding(end = 8.dp)
-            ) {
-                Text("No", color = Color.White)
+                Icon(
+                    painter = painterResource(id = R.drawable.icon),
+                    modifier = Modifier.size(75.dp),
+                    contentDescription = "RoadSense Icon",
+                    tint = Orange
+                )
+                Text(
+                    text = "Are you sure?",
+                    modifier = Modifier.padding(top = 5.dp, bottom = 25.dp)
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    Button(
+                        onClick = onConfirm,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Orange,
+                            contentColor = Color.White
+                            )
+                    ) {
+                        Text(text = "Yes")
+                    }
+
+                    Spacer(modifier = Modifier.padding(14.dp))
+
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Orange,
+                            contentColor = Color.White
+                        )
+                        ) {
+                        Text(text = "No")
+                    }
+                }
             }
         }
-    )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
