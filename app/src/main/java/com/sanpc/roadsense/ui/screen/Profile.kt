@@ -145,7 +145,6 @@ fun Profile(
             }
         }
 
-        // Dialogo di conferma
         if (showDialog.value) {
             ConfirmDialog(
                 onDismiss = {
