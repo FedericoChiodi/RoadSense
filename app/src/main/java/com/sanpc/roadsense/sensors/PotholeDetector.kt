@@ -17,7 +17,8 @@ import kotlin.math.abs
 class PotholeDetector(
     context: Context,
     private val locationViewModel: LocationViewModel,
-    private val zThreshold: Float = 37f
+    private val zThreshold: Float = 37f,
+    private val backOff: Int = 1500
 ) : SensorEventListener {
 
     private val _potholeData = MutableSharedFlow<Pothole>(replay = 1)
@@ -30,6 +31,8 @@ class PotholeDetector(
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
     private val username = UserPreferences(context).username
+
+    private var lastDetectionTime: Long = 0
 
     fun startDetection() {
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
@@ -45,7 +48,15 @@ class PotholeDetector(
             _zValue.tryEmit(zValue)
 
             if (abs(zValue) > zThreshold) {
-                val timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
+                val currentTime = System.currentTimeMillis()
+
+                if (currentTime - lastDetectionTime < backOff) {
+                    return
+                }
+
+                lastDetectionTime = currentTime
+
+                val timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(currentTime)
 
                 locationViewModel.getCurrentLocation()
 
