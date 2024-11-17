@@ -91,7 +91,7 @@ fun Map(
                     val mapView = MapView(context)
                     mapView.setTileSource(TileSourceFactory.MAPNIK)
                     mapView.setMultiTouchControls(true)
-                    mapView.controller.setZoom(16.20)
+                    mapView.controller.setZoom(18.45)
                     mapView.isTilesScaledToDpi = false
                     mapView.controller.setCenter(locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER).let { GeoPoint(it!!.latitude, it.longitude) })
 
