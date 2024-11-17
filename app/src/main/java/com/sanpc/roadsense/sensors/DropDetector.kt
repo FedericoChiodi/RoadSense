@@ -60,8 +60,6 @@ class DropDetector(
 
             _gyroLevel.tryEmit(angle.toFloat())
 
-            Log.d("DropDetector", "Inclinazione angolare: $angle")
-
             if (abs(angle) > startThreshold && !isDropStarted) {
                 isDropStarted = true
                 retrieveLocation { latitude, longitude ->
