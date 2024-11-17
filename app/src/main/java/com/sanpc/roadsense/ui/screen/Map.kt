@@ -108,6 +108,7 @@ fun Map(
                         val startMarker = Marker(mapView)
                         startMarker.position = startGeoPoint
                         startMarker.icon = dropStartIcon
+                        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         startMarker.setOnMarkerClickListener { _, _ ->
                             startMarker.title = "Drop Start"
                             startMarker.snippet = "Start Location: ${startGeoPoint.latitude}, ${startGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
@@ -118,6 +119,7 @@ fun Map(
                         val endMarker = Marker(mapView)
                         endMarker.position = endGeoPoint
                         endMarker.icon = dropEndIcon
+                        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         endMarker.setOnMarkerClickListener { _, _ ->
                             endMarker.title = "Drop End"
                             endMarker.snippet = "End Location: ${endGeoPoint.latitude}, ${endGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
