@@ -13,7 +13,9 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -82,6 +84,8 @@ fun AppNavigation(
         potholeViewModel = potholeViewModel
     )
 
+    val openDialog = remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             if (showBars) {
@@ -90,19 +94,26 @@ fun AppNavigation(
         },
         bottomBar = {
             if (showBars) {
-                BottomBar(navController) {
+                BottomBar(navController) { openDialog.value = true }
+            }
+        }
+    ) {
+        if (openDialog.value) {
+            ConfirmDialog(
+                onDismiss = { openDialog.value = false },
+                onConfirm = {
+                    openDialog.value = false
                     Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.IO).launch {
                         mqttClient.connectAndSyncData()
-
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-            }
+            )
         }
-    ) {
+
         NavHost(
             navController = navController,
             startDestination = startDestination,
@@ -155,6 +166,34 @@ fun AppNavigation(
             }
         )
     }
+}
+
+@Composable
+fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Confirm Action") },
+        text = { Text("Do you want to send the data?") },
+        containerColor = Color.White,
+        confirmButton = {
+            androidx.compose.material3.Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text("Yes", color = Color.White)
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                        modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text("No", color = Color.White)
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
