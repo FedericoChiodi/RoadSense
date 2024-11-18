@@ -1,4 +1,5 @@
 <div align="center">
+
 # RoadSense
 
 <img alt="logo" height="150" src="app/src/main/res/drawable/splash_icon.png" width="150"/>
