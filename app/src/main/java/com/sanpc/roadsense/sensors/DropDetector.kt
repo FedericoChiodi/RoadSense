@@ -20,8 +20,8 @@ import kotlin.math.sqrt
 class DropDetector(
     context: Context,
     private val locationViewModel: LocationViewModel,
-    private val startThreshold: Float = 60f,
-    private val endThreshold: Float = 5f
+    private val startThreshold: Float = Thresholds.DROP_HIGH,
+    private val endThreshold: Float = Thresholds.DROP_LOW
 ) : SensorEventListener {
 
     private val _dropData = MutableSharedFlow<Drop>(replay = 1)
