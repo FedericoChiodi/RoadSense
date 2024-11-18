@@ -1,9 +1,11 @@
+<div align="center">
 # RoadSense
 
 <img alt="logo" height="150" src="app/src/main/res/drawable/splash_icon.png" width="150"/>
 
 ---
 RoadSense è un'applicazione Android che rileva buche e dislivelli utilizzando i sensori dello smartphone
+</div>
 
 ## Funzionalità
 - **Rilevamento Buche**: Utilizza l'accelerometro del dispositivo per rilevare buche lungo la strada
