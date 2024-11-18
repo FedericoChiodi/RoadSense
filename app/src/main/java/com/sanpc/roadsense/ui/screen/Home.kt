@@ -167,7 +167,7 @@ fun Home(
                     )
                 ) {
                     Text(
-                        text = if (isDropDetectionActive) "Stop Drop Detection" else "Start Drop Detection",
+                        text = if (isDropDetectionActive) "Stop Slope Detection" else "Start Slope Detection",
                         color = Color.White,
                         fontSize = 18.sp
                     )

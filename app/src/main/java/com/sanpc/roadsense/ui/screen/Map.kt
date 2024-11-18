@@ -110,7 +110,7 @@ fun Map(
                         startMarker.icon = dropStartIcon
                         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         startMarker.setOnMarkerClickListener { _, _ ->
-                            startMarker.title = "Drop Start"
+                            startMarker.title = "Slope Start"
                             startMarker.snippet = "Start Location: ${startGeoPoint.latitude}, ${startGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
                             startMarker.showInfoWindow()
                             true
@@ -121,7 +121,7 @@ fun Map(
                         endMarker.icon = dropEndIcon
                         endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                         endMarker.setOnMarkerClickListener { _, _ ->
-                            endMarker.title = "Drop End"
+                            endMarker.title = "Slope End"
                             endMarker.snippet = "End Location: ${endGeoPoint.latitude}, ${endGeoPoint.longitude}<br>Detection Date: ${drop.detectionDate}"
                             endMarker.showInfoWindow()
                             true

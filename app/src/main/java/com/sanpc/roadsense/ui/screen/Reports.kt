@@ -42,7 +42,7 @@ fun Reports(
     drops: List<Drop>
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Potholes", "Drops")
+    val tabs = listOf("Potholes", "Slopes")
 
     Box(
         modifier = Modifier
