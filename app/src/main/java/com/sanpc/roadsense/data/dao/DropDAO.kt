@@ -23,6 +23,6 @@ interface DropDao {
     @Query("SELECT * FROM drops")
     suspend fun getAllDrops(): List<Drop>
 
-    @Query("SELECT * FROM drops WHERE username = :username")
+    @Query("SELECT * FROM drops WHERE username = :username ORDER BY detectionDate DESC")
     suspend fun getDropsByUsername(username: String): List<Drop>
 }

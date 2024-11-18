@@ -23,6 +23,6 @@ interface PotholeDao {
     @Query("SELECT * FROM potholes")
     suspend fun getAllPotholes(): List<Pothole>
 
-    @Query("SELECT * FROM potholes WHERE username = :username")
+    @Query("SELECT * FROM potholes WHERE username = :username ORDER BY detectionDate DESC")
     suspend fun getPotholesByUsername(username: String): List<Pothole>
 }
