@@ -1,6 +1,7 @@
 package com.sanpc.roadsense.ui.screen
 
 import android.content.Context
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sanpc.roadsense.sensors.PotholeDetector
 import com.sanpc.roadsense.sensors.DropDetector
+import com.sanpc.roadsense.sensors.Thresholds
 import com.sanpc.roadsense.ui.theme.LightGreen
 import com.sanpc.roadsense.ui.theme.Orange
 import com.sanpc.roadsense.ui.viewmodel.DropViewModel
@@ -49,6 +51,17 @@ fun Home(
     val potholeLevel by potholeDetector.zValue.collectAsState(initial = 0f)
     val gyroLevel by dropDetector.gyroLevel.collectAsState(initial = 0f)
 
+    val potholeLevels = remember { mutableStateListOf<Float>() }
+    val gyroLevels = remember { mutableStateListOf<Float>() }
+
+    LaunchedEffect(potholeLevel) {
+        if (potholeLevels.size > 50) potholeLevels.removeAt(0)
+        potholeLevels.add(potholeLevel)
+    }
+    LaunchedEffect(gyroLevel) {
+        if (gyroLevels.size > 50) gyroLevels.removeAt(0)
+        gyroLevels.add(gyroLevel)
+    }
 
     LaunchedEffect(potholeData.value) {
         potholeData.value?.let {
@@ -112,11 +125,13 @@ fun Home(
                     )
                 }
 
-                Text(text = "Pothole Level:", fontSize = 16.sp, color = Color.Black)
-                Text(
-                    text = potholeLevel.toString(),
-                    fontSize = 14.sp,
-                    color = Color.Black
+                Text(text = "Pothole Level: $potholeLevel", fontSize = 16.sp, color = Color.Black)
+
+                Graph(
+                    data = potholeLevels,
+                    lineColor = Color.Red,
+                    minY = Thresholds.MIN_Y_POTHOLE,
+                    maxY = Thresholds.MAX_Y_POTHOLE
                 )
             }
         }
@@ -158,13 +173,70 @@ fun Home(
                     )
                 }
 
-                Text(text = "Gyroscope Level:", fontSize = 16.sp, color = Color.Black)
-                Text(
-                    text = gyroLevel.toString(),
-                    fontSize = 14.sp,
-                    color = Color.Black
+                Text(text = "Gyroscope Level: $gyroLevel", fontSize = 16.sp, color = Color.Black)
+
+                Graph(
+                    data = gyroLevels,
+                    lineColor = Color.Blue,
+                    thresholds = listOf(Thresholds.DROP_LOW, Thresholds.DROP_HIGH, -Thresholds.DROP_HIGH, -Thresholds.DROP_LOW),
+                    minY = Thresholds.MIN_Y_DROP,
+                    maxY = Thresholds.MAX_Y_DROP
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun Graph(
+    data: List<Float>,
+    lineColor: Color,
+    thresholds: List<Float> = emptyList(),
+    minY: Float,
+    maxY: Float
+) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val rangeY = maxY - minY
+
+        drawLine(
+            color = Color.Gray,
+            start = androidx.compose.ui.geometry.Offset(0f, size.height),
+            end = androidx.compose.ui.geometry.Offset(size.width, size.height),
+            strokeWidth = 2f
+        )
+        drawLine(
+            color = Color.Gray,
+            start = androidx.compose.ui.geometry.Offset(0f, 0f),
+            end = androidx.compose.ui.geometry.Offset(0f, size.height),
+            strokeWidth = 2f
+        )
+
+        val stepX = size.width / (data.size - 1).coerceAtLeast(1)
+        val points = data.mapIndexed { index, value ->
+            val x = stepX * index
+            val y = size.height - ((value - minY) / rangeY) * size.height
+            x to y
+        }
+
+        for (i in 0 until points.size - 1) {
+            val (x1, y1) = points[i]
+            val (x2, y2) = points[i + 1]
+            drawLine(
+                color = lineColor,
+                start = androidx.compose.ui.geometry.Offset(x1, y1),
+                end = androidx.compose.ui.geometry.Offset(x2, y2),
+                strokeWidth = 4f
+            )
+        }
+
+        thresholds.forEach { threshold ->
+            val y = size.height - ((threshold - minY) / rangeY) * size.height
+            drawLine(
+                color = Color.Red.copy(alpha = 0.7f),
+                start = androidx.compose.ui.geometry.Offset(0f, y),
+                end = androidx.compose.ui.geometry.Offset(size.width, y),
+                strokeWidth = 2f
+            )
         }
     }
 }
