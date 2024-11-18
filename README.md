@@ -1,5 +1,6 @@
 # RoadSense
-![logo](app/src/main/res/drawable/splash_icon.png)
+
+<img alt="logo" height="512" src="app/src/main/res/drawable/splash_icon.png" width="512"/>
 
 ---
 RoadSense è un'applicazione Android che rileva buche e dislivelli utilizzando i sensori dello smartphone
@@ -39,6 +40,5 @@ RoadSense è un'applicazione Android che rileva buche e dislivelli utilizzando i
 ## Crediti
 Creato da [Federico Chiodi](https://github.com/FedericoChiodi) per il progetto di industria 4.0 @UniFE
 
----
 ## Licenza
 [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
